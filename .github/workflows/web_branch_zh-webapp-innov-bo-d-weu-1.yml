@@ -6,7 +6,7 @@ name: Build and deploy ASP app to Azure Web App - zh-webapp-innov-bo-d-weu-1
 on:
   push:
     branches:
-      - main  # J'ai changé "Web_Branch" en "main" pour correspondre à la branche principale de votre dépôt
+      - Web_Branch  # J'ai changé "Web_Branch" en "main" pour correspondre à la branche principale de votre dépôt
   workflow_dispatch:
 
 jobs:
