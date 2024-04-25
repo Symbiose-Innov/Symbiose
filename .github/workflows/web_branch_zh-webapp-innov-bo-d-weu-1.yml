@@ -54,4 +54,4 @@ jobs:
           app-name: 'zh-webapp-innov-bo-d-weu-1'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_30B99D5B640648A1BE60C9F974A5055F }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2F8F160965064816A0EE88CFF34F5F0C }}
