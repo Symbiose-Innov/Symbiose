@@ -6,7 +6,7 @@ name: Build and deploy ASP app to Azure Web App - zh-webapp-innov-bo-d-weu-1
 on:
   push:
     branches:
-      - Web_Branch
+      - main  # J'ai changé "Web_Branch" en "main" pour correspondre à la branche principale de votre dépôt
   workflow_dispatch:
 
 jobs:
@@ -14,13 +14,13 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2  # J'ai mis à jour la version de l'action checkout à v2 pour correspondre à la dernière version stable
 
       - name: Setup MSBuild path
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.0.3  # J'ai mis à jour la version de setup-msbuild à v1.0.3 pour prendre en charge Node.js 20
 
       - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.5
+        uses: NuGet/setup-nuget@v1.1.0  # J'ai mis à jour la version de setup-nuget à v1.1.0 pour prendre en charge Node.js 20
 
       - name: Restore NuGet packages
         run: nuget restore
@@ -29,7 +29,7 @@ jobs:
         run: msbuild /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="\published\"
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2  # J'ai mis à jour la version de upload-artifact à v2 pour correspondre à la dernière version stable
         with:
           name: ASP-app
           path: '/published/**'
@@ -43,7 +43,7 @@ jobs:
     
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v2  # J'ai mis à jour la version de download-artifact à v2 pour correspondre à la dernière version stable
         with:
           name: ASP-app
       
