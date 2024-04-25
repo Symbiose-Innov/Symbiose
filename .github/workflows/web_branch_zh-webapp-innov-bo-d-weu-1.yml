@@ -35,11 +35,6 @@ jobs:
     environment:
       name: 'Production'
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2
-        with:
-          name: ASP-app
-      
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
