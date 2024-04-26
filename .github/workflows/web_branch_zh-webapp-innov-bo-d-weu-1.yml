@@ -1,4 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy,Xavier
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
 name: Build and deploy ASP app to Azure Web App - zh-webapp-innov-bo-d-weu-1
@@ -6,7 +6,7 @@ name: Build and deploy ASP app to Azure Web App - zh-webapp-innov-bo-d-weu-1
 on:
   push:
     branches:
-      - Web_Branch  # Conserver "Web_Branch" si c'est le nom correct de votre branche
+      - Web_Branch
   workflow_dispatch:
 
 jobs:
@@ -14,14 +14,13 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2  # Utiliser la version stable la plus récente de l'action checkout
+      - uses: actions/checkout@v4
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1.0.3  # Utiliser la version stable la plus récente de l'action setup-msbuild
+      - name: Setup MSBuild path
+        uses: microsoft/setup-msbuild@v1.0.2
 
       - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.1.0  # Utiliser la version stable la plus récente de l'action setup-nuget
+        uses: NuGet/setup-nuget@v1.0.5
 
       - name: Restore NuGet packages
         run: nuget restore
@@ -29,16 +28,30 @@ jobs:
       - name: Publish to folder
         run: msbuild /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="\published\"
 
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: ASP-app
+          path: '/published/**'
+
   deploy:
     runs-on: windows-latest
     needs: build
     environment:
       name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    
     steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: ASP-app
+      
       - name: Deploy to Azure Web App
+        id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'zh-webapp-innov-bo-d-weu-1'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2F8F160965064816A0EE88CFF34F5F0C }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3A2966CB38B34AD78720B35A4E9C1DAB }}
